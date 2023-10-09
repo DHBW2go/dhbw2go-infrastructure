@@ -18,13 +18,7 @@ terraform {
     }
   }
 
-  cloud {
-    token = var.TF_API_TOKEN
-    organization = var.TF_CLOUD_ORGANIZATION
-    workspaces {
-      name = var.TF_WORKSPACE
-    }
-  }
+  cloud {}
 }
 
 provider "azurerm" {
