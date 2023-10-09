@@ -17,13 +17,13 @@ terraform {
       version = "5.39.0"
     }
   }
-}
 
-cloud {
-  token = var.TF_API_TOKEN
-  organization = var.TF_CLOUD_ORGANIZATION
-  workspaces {
-    name = var.TF_WORKSPACE
+  cloud {
+    token = var.TF_API_TOKEN
+    organization = var.TF_CLOUD_ORGANIZATION
+    workspaces {
+      name = var.TF_WORKSPACE
+    }
   }
 }
 
