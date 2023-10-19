@@ -6,7 +6,7 @@ terraform {
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.75.0"
+      version = "3.76.0"
     }
     ionoscloud = {
       source  = "ionos-cloud/ionoscloud"
