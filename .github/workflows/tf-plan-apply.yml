@@ -2,9 +2,9 @@ name: 'Terraform Plan/Apply'
 
 on:
   push:
-    branches: [ "production", "development" ]
-  pull_request:
-    branches:  [ "production" ]
+    branches:
+    - 'production'
+    - 'development'
 
 env:
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
