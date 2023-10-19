@@ -5,9 +5,6 @@ on:
     branches:
     - 'production'
     - 'development'
-  pull_request:
-    branches:
-    - 'production'
 
 env:
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
