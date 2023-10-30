@@ -10,7 +10,7 @@ terraform {
     }
     ionoscloud = {
       source  = "ionos-cloud/ionoscloud"
-      version = "6.4.9"
+      version = "6.4.10"
     }
     github = {
       source  = "integrations/github"
