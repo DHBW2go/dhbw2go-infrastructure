@@ -5,7 +5,7 @@ data "cloudflare_zone" "DHBW2go" {
 }
 
 resource "azurerm_resource_group" "Backend" {
-  name     = "Resources-dhbw2go-backend"
+  name     = "resources-dhbw2go-backend"
   location = "Germany West Central"
 }
 
