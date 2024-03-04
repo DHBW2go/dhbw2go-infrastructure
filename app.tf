@@ -37,6 +37,8 @@ resource "azurerm_key_vault_access_policy" "Azure-KeyVault-DHBW2go-AccessPolicy-
   secret_permissions = [
     "Get"
   ]
+
+  depends_on = [azurerm_linux_web_app.Azure-App-DHBW2go]
 }
 
 
