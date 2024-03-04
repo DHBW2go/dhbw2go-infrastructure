@@ -17,7 +17,7 @@ resource "azurerm_linux_web_app" "Azure-App-DHBW2go" {
 }
 
 resource "azurerm_app_service_custom_hostname_binding" "Azure-App-DHBW2go-CustomHostnameBinding" {
-  hostname            = cloudflare_record.Cloudflare-Record-API-CNAME.hostname
+  hostname            = "api.${data.cloudflare_zone.Cloudflare-Zone-DHBW2go.name}"
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Backend.name
   app_service_name    = azurerm_linux_web_app.Azure-App-DHBW2go.name
 
@@ -40,7 +40,7 @@ resource "cloudflare_record" "Cloudflare-Record-API-CNAME" {
 
   type    = "CNAME"
 
-  name    = "api"
+  name    = azurerm_app_service_custom_hostname_binding.Azure-App-DHBW2go-CustomHostnameBinding.hostname
   value   = azurerm_linux_web_app.Azure-App-DHBW2go.default_hostname
 
   depends_on = [cloudflare_record.Cloudflare-Record-API-TXT]
