@@ -14,7 +14,27 @@ resource "azurerm_linux_web_app" "Azure-App-DHBW2go" {
   service_plan_id     = azurerm_service_plan.Azure-ServicePlan-DHBW2go.id
 
   site_config {}
+
+  app_settings = {
+    "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-Database-CNAME.hostname
+    "MYSQL_PORT"     = "3306"
+    "MYSQL_DATABASE" = azurerm_mysql_flexible_database.Azure-MySQL-FlexibleServer-DHBW2go-Database-Backend.name
+    "MYSQL_USERNAME" = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer-DHBW2go.administrator_login
+    "MYSQL_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.Azure-KeyVault-DHBW2go-Secret-Database.versionless_id})"
+
+  }
 }
+
+resource "azurerm_key_vault_access_policy" "Azure-KeyVault-DHBW2go-AccessPolicy-App" {
+  key_vault_id = azurerm_key_vault.Azure-KeyVault-DHBW2go.id
+  tenant_id    = data.azurerm_client_config.Azure-ClientConfig-Current.tenant_id
+  object_id    = azurerm_linux_web_app.Azure-App-DHBW2go.identity[0].principal_id
+
+  secret_permissions = [
+    "Get"
+  ]
+}
+
 
 resource "azurerm_app_service_custom_hostname_binding" "Azure-App-DHBW2go-CustomHostnameBinding" {
   hostname            = "api.${data.cloudflare_zone.Cloudflare-Zone-DHBW2go.name}"
