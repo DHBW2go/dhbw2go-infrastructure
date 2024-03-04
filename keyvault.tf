@@ -2,7 +2,7 @@ resource "azurerm_key_vault" "KeyVault-DHBW2go" {
   name                        = "keyvault-dhbw2go"
   location                    = azurerm_resource_group.ResourceGroup-Data.location
   resource_group_name         = azurerm_resource_group.ResourceGroup-Data.name
-  tenant_id                   = data.azurerm_client_config.ClientConfig
+  tenant_id                   = data.azurerm_client_config.ClientConfig.tenant_id
 
   sku_name                    = "standard"
 }
