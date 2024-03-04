@@ -18,6 +18,15 @@ resource "azurerm_mysql_flexible_server_firewall_rule" "AllowAll" {
   end_ip_address      = "255.255.255.255"
 }
 
+resource "azurerm_mysql_flexible_database" "Backend" {
+  name                = "backend"
+  resource_group_name = azurerm_resource_group.Data.name
+  server_name         = azurerm_mysql_flexible_server.DHBW2go.name
+
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
+}
+
 resource "cloudflare_record" "CNAME-Database" {
   zone_id = data.cloudflare_zone.DHBW2go.id
 
