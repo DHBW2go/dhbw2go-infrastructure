@@ -11,5 +11,5 @@ resource "azurerm_key_vault_secret" "Database" {
   name         = "secret-database"
   key_vault_id = azurerm_key_vault.DHBW2go.id
 
-  value        = random_password.RandomPassword.result
+  value        = random_password.Database.result
 }
