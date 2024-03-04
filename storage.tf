@@ -5,4 +5,17 @@ resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
 
   account_tier             = "Standard"
   account_replication_type = "LRS"
+
+  custom_domain {
+    name = cloudflare_record.Cloudflare-Record-Storage-CNAME.hostname
+  }
+}
+
+resource "cloudflare_record" "Cloudflare-Record-Storage-CNAME" {
+  zone_id = data.cloudflare_zone.Cloudflare-Zone-DHBW2go.id
+
+  type = "CNAME"
+
+  name  = "storage"
+  value = "${azurerm_storage_account.Azure-StorageAccount-DHBW2go.name}.blob.core.windows.net"
 }
