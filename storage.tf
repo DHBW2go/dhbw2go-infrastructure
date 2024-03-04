@@ -9,6 +9,8 @@ resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
   custom_domain {
     name = cloudflare_record.Cloudflare-Record-Storage-CNAME.hostname
   }
+
+  depends_on = [cloudflare_record.Cloudflare-Record-Storage-CNAME]
 }
 
 resource "cloudflare_record" "Cloudflare-Record-Storage-CNAME" {
