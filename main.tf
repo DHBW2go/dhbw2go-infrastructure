@@ -18,7 +18,12 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    key_vault {
+      purge_soft_deleted_secrets_on_destroy = true
+      recover_soft_deleted_secrets          = true
+    }
+  }
 
   skip_provider_registration = "true"
 
@@ -30,4 +35,9 @@ provider "azurerm" {
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+resource "random_password" "RandomPassword" {
+  length  = 16
+  special = true
 }
