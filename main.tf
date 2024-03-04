@@ -37,7 +37,7 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-resource "random_password" "Database" {
+resource "random_password" "RandomPassword-Database" {
   length  = 16
   special = true
 }
