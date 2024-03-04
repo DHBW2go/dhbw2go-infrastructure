@@ -40,7 +40,7 @@ resource "cloudflare_record" "Cloudflare-Record-API-CNAME" {
 
   type    = "CNAME"
 
-  name    = azurerm_app_service_custom_hostname_binding.Azure-App-DHBW2go-CustomHostnameBinding.hostname
+  name    = "api"
   value   = azurerm_linux_web_app.Azure-App-DHBW2go.default_hostname
 
   depends_on = [cloudflare_record.Cloudflare-Record-API-TXT]

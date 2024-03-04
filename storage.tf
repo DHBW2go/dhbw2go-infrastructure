@@ -9,8 +9,6 @@ resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
   custom_domain {
     name = "storage.${data.cloudflare_zone.Cloudflare-Zone-DHBW2go.name}"
   }
-
-  depends_on = [cloudflare_record.Cloudflare-Record-Storage-CNAME]
 }
 
 resource "cloudflare_record" "Cloudflare-Record-Storage-CNAME" {
@@ -18,6 +16,6 @@ resource "cloudflare_record" "Cloudflare-Record-Storage-CNAME" {
 
   type = "CNAME"
 
-  name  = azurerm_storage_account.Azure-StorageAccount-DHBW2go.custom_domain.name
+  name  = "storage"
   value = "${azurerm_storage_account.Azure-StorageAccount-DHBW2go.name}.blob.core.windows.net"
 }

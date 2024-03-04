@@ -7,8 +7,6 @@ resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer-DHBW2go" {
 
   administrator_login    = "DHBW2go"
   administrator_password = azurerm_key_vault_secret.Azure-KeyVault-DHBW2go-Secret-Database.value
-
-  depends_on = [cloudflare_record.Cloudflare-Record-Database-CNAME]
 }
 
 resource "azurerm_mysql_flexible_server_firewall_rule" "Azure-MySQL-FlexibleServer-DHBW2go-AllowAll" {
