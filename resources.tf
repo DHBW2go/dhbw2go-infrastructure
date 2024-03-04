@@ -1,5 +1,9 @@
 data "azurerm_client_config" "ClientConfig" {}
 
+data "cloudflare_zone" "Zone-DHBW2go" {
+  name = "dhbw2go.de"
+}
+
 resource "azurerm_resource_group" "ResourceGroup-Backend" {
   name     = "Resources-dhbw2go-backend"
   location = "Germany West Central"
