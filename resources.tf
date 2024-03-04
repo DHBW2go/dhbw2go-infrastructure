@@ -1,15 +1,15 @@
 data "azurerm_client_config" "Current" {}
 
-data "cloudflare_zone" "DHBW2go" {
+data "cloudflare_zone" "Cloudflare-Zone-DHBW2go" {
   name = "dhbw2go.de"
 }
 
-resource "azurerm_resource_group" "Backend" {
+resource "azurerm_resource_group" "Azure-ResourceGroup-Backend" {
   name     = "resources-dhbw2go-backend"
   location = "Germany West Central"
 }
 
-resource "azurerm_resource_group" "Data" {
+resource "azurerm_resource_group" "Azure-ResourceGroup-Data" {
   name     = "resources-dhbw2go-data"
   location = "Germany West Central"
 }
