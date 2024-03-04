@@ -1,5 +1,10 @@
+variable "database_name" {
+  type = string
+  default = "database-dhbw2go"
+}
+
 resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer-DHBW2go" {
-  name                   = "database-dhbw2go"
+  name                   = var.database_name
   resource_group_name    = azurerm_resource_group.Azure-ResourceGroup-Data.name
   location               = azurerm_resource_group.Azure-ResourceGroup-Data.location
 
@@ -7,6 +12,8 @@ resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer-DHBW2go" {
 
   administrator_login    = "DHBW2go"
   administrator_password = azurerm_key_vault_secret.Azure-KeyVault-DHBW2go-Secret-Database.value
+
+  depends_on = [cloudflare_record.Cloudflare-Record-Database-CNAME]
 }
 
 resource "azurerm_mysql_flexible_server_firewall_rule" "Azure-MySQL-FlexibleServer-DHBW2go-AllowAll" {
@@ -33,5 +40,5 @@ resource "cloudflare_record" "Cloudflare-Record-Database-CNAME" {
   type    = "CNAME"
 
   name    = "database"
-  value   = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer-DHBW2go.fqdn
+  value   = "${var.database_name}.mysql.database.azure.com"
 }
