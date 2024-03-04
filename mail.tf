@@ -1,5 +1,5 @@
-resource "cloudflare_record" "Record-TXT-Mail-Domain" {
-  zone_id = data.cloudflare_zone.Zone-DHBW2go.id
+resource "cloudflare_record" "TXT-Mail-Domain" {
+  zone_id = data.cloudflare_zone.DHBW2go.id
 
   type    = "TXT"
   name    = "@"
@@ -7,8 +7,8 @@ resource "cloudflare_record" "Record-TXT-Mail-Domain" {
   value   = var.apple_domain
 }
 
-resource "cloudflare_record" "Record-TXT-Mail-SPF" {
-  zone_id = data.cloudflare_zone.Zone-DHBW2go.id
+resource "cloudflare_record" "TXT-Mail-SPF" {
+  zone_id = data.cloudflare_zone.DHBW2go.id
 
   type    = "TXT"
 
@@ -16,8 +16,8 @@ resource "cloudflare_record" "Record-TXT-Mail-SPF" {
   value   = "v=spf1 include:icloud.com ~all"
 }
 
-resource "cloudflare_record" "Record-MX-Mail-01" {
-  zone_id  = data.cloudflare_zone.Zone-DHBW2go.id
+resource "cloudflare_record" "MX-Mail-01" {
+  zone_id  = data.cloudflare_zone.DHBW2go.id
 
   type     = "MX"
 
@@ -27,9 +27,9 @@ resource "cloudflare_record" "Record-MX-Mail-01" {
   priority = 10
 }
 
-resource "cloudflare_record" "Record-MX-Mail-02" {
+resource "cloudflare_record" "MX-Mail-02" {
 
-  zone_id  = data.cloudflare_zone.Zone-DHBW2go.id
+  zone_id  = data.cloudflare_zone.DHBW2go.id
 
   type     = "MX"
 
@@ -39,8 +39,8 @@ resource "cloudflare_record" "Record-MX-Mail-02" {
   priority = 10
 }
 
-resource "cloudflare_record" "Record-CNAME-Mail-DKIM" {
-  zone_id = data.cloudflare_zone.Zone-DHBW2go.id
+resource "cloudflare_record" "CNAME-Mail-DKIM" {
+  zone_id = data.cloudflare_zone.DHBW2go.id
 
   type    = "CNAME"
 
