@@ -38,5 +38,4 @@ resource "cloudflare_record" "Record-CNAME-iCloudMail-DKIM" {
   name    = "sig1._domainkey"
   value   = "sig1.dkim.dhbw2go.de.at.icloudmailadmin.com"
   type    = "CNAME"
-  proxied = true
 }
