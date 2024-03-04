@@ -15,6 +15,10 @@ resource "azurerm_linux_web_app" "Azure-App-DHBW2go" {
 
   site_config {}
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   app_settings = {
     "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-Database-CNAME.hostname
     "MYSQL_PORT"     = "3306"
