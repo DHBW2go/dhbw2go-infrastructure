@@ -5,8 +5,8 @@ variable "storage_name" {
 
 resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
   name                     = var.storage_name
-  resource_group_name      = azurerm_resource_group.Azure-ResourceGroup-Backend.name
-  location                 = azurerm_resource_group.Azure-ResourceGroup-Backend.location
+  resource_group_name      = azurerm_resource_group.Azure-ResourceGroup-Data.name
+  location                 = azurerm_resource_group.Azure-ResourceGroup-Data.location
 
   account_tier             = "Standard"
   account_replication_type = "LRS"
