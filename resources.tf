@@ -1,4 +1,4 @@
-data "azurerm_client_config" "ClientConfig" {}
+data "azurerm_client_config" "Current" {}
 
 data "cloudflare_zone" "DHBW2go" {
   name = "dhbw2go.de"
