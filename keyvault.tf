@@ -26,4 +26,6 @@ resource "azurerm_key_vault_secret" "Azure-KeyVault-DHBW2go-Secret-Database" {
   key_vault_id = azurerm_key_vault.Azure-KeyVault-DHBW2go.id
 
   value        = random_password.RandomPassword-Database.result
+
+  depends_on = [azurerm_key_vault_access_policy.Azure-KeyVault-DHBW2go-AccessPolicy-AllowAll]
 }
