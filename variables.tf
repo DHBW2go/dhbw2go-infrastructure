@@ -18,6 +18,14 @@ variable "cloudflare_api_token" {
   type = string
 }
 
+variable "github_token" {
+  type = string
+}
+
+variable "github_repository_backend" {
+  type = string
+}
+
 variable "apple_domain" {
   type = string
 }
