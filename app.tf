@@ -81,7 +81,7 @@ resource "cloudflare_record" "Cloudflare-Record-API-TXT" {
   value   = azurerm_linux_web_app.Azure-App-DHBW2go.custom_domain_verification_id
 }
 
-resource "azurerm_role_assignment" "example" {
+resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor-Backend" {
   scope              = azurerm_linux_web_app.Azure-App-DHBW2go.id
   role_definition_name = "Contributor"
 
