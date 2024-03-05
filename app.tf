@@ -86,6 +86,7 @@ resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor
   role_definition_name = "Contributor"
 
   principal_id       = var.azure_service_principal_id_backend
+  skip_service_principal_aad_check = true
 }
 
 resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
