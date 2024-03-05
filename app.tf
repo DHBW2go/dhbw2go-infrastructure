@@ -80,3 +80,17 @@ resource "cloudflare_record" "Cloudflare-Record-API-TXT" {
   name    = "asuid.api"
   value   = azurerm_linux_web_app.Azure-App-DHBW2go.custom_domain_verification_id
 }
+
+resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor-Backend" {
+  scope              = azurerm_linux_web_app.Azure-App-DHBW2go.id
+  role_definition_name = "Contributor"
+
+  principal_id       = var.azure_service_principal_id_backend
+}
+
+resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
+  repository       = var.github_repository_backend
+
+  variable_name    = "AZURE_APP_NAME"
+  value            = azurerm_linux_web_app.Azure-App-DHBW2go.name
+}
