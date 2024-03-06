@@ -89,8 +89,12 @@ resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor
   skip_service_principal_aad_check = true
 }
 
+data "github_repository" "GitHub-Repository-Backend" {
+  full_name = "DHBW2go/dhbw2go-backend"
+}
+
 resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
-  repository       = var.github_repository_backend
+  repository       = data.github_repository.GitHub-Repository-Backend.full_name
 
   variable_name    = "AZURE_APP_NAME"
   value            = azurerm_linux_web_app.Azure-App-DHBW2go.name
