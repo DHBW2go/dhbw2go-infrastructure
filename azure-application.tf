@@ -22,7 +22,7 @@ resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
   }
 
   app_settings = {
-    "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-CNAME-Database.hostname
+    "MYSQL_HOSTNAME" = "${azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer.name}.${azurerm_private_dns_zone.Azure-PrivateDNSZone-Database.name}"
     "MYSQL_PORT"     = "3306"
     "MYSQL_DATABASE" = azurerm_mysql_flexible_database.Azure-MySQL-FlexibleServer-Database-Backend.name
     "MYSQL_USERNAME" = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer.administrator_login
