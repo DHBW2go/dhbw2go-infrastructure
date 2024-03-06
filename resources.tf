@@ -5,16 +5,16 @@ data "cloudflare_zone" "Cloudflare-Zone" {
 }
 
 resource "azurerm_resource_group" "Azure-ResourceGroup-Application" {
-  name     = "resources-dhbw2go-application"
+  name     = "dhbw2go-resources-application"
   location = "Germany West Central"
 }
 
 resource "azurerm_resource_group" "Azure-ResourceGroup-Data" {
-  name     = "resources-dhbw2go-data"
+  name     = "dhbw2go-resources-data"
   location = "Germany West Central"
 }
 
 resource "azurerm_resource_group" "Azure-ResourceGroup-Network" {
-  name     = "resources-dhbw2go-network"
+  name     = "dhbw2go-resources-network"
   location = "Germany West Central"
 }
