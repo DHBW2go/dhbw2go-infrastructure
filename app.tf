@@ -89,12 +89,13 @@ resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor
   skip_service_principal_aad_check = true
 }
 
-data "github_repository" "GitHub-Repository-Backend" {
+data "github_repository" "GitHub-Repository-DHBW2go-Backend" {
   full_name = "DHBW2go/dhbw2go-backend"
 }
 
-resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
-  repository       = data.github_repository.GitHub-Repository-Backend.full_name
+resource "github_actions_organization_variable" "GitHub-Actions-Organization-Variable-AZURE_APP_NAME" {
+  selected_repository_ids = [data.github_repository.GitHub-Repository-DHBW2go-Backend.repo_id]
+  visibility              = "selected"
 
   variable_name    = "AZURE_APP_NAME"
   value            = azurerm_linux_web_app.Azure-App-DHBW2go.name
