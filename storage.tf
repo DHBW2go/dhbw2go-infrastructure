@@ -3,7 +3,7 @@ variable "storage_name" {
   default = "dhbw2go"
 }
 
-resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
+resource "azurerm_storage_account" "Azure-StorageAccount" {
   name                     = var.storage_name
   resource_group_name      = azurerm_resource_group.Azure-ResourceGroup-Data.name
   location                 = azurerm_resource_group.Azure-ResourceGroup-Data.location
@@ -12,14 +12,18 @@ resource "azurerm_storage_account" "Azure-StorageAccount-DHBW2go" {
   account_replication_type = "LRS"
 
   custom_domain {
-    name = "storage.${data.cloudflare_zone.Cloudflare-Zone-DHBW2go.name}"
+    name = "storage.${data.cloudflare_zone.Cloudflare-Zone.name}"
   }
 
-  depends_on = [cloudflare_record.Cloudflare-Record-Storage-CNAME]
+  depends_on = [cloudflare_record.Cloudflare-Record-CNAME-Storage]
 }
 
-resource "cloudflare_record" "Cloudflare-Record-Storage-CNAME" {
-  zone_id = data.cloudflare_zone.Cloudflare-Zone-DHBW2go.id
+################################################################
+######################## Custom Domain #########################
+################################################################
+
+resource "cloudflare_record" "Cloudflare-Record-CNAME-Storage" {
+  zone_id = data.cloudflare_zone.Cloudflare-Zone.id
 
   type = "CNAME"
 

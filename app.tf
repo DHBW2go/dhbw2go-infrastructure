@@ -1,16 +1,17 @@
-resource "azurerm_service_plan" "Azure-ServicePlan-DHBW2go" {
-  name                = "serviceplan-dhbw2go"
+resource "azurerm_service_plan" "Azure-ServicePlan" {
+  name                = "dhbw2go-appserviceplan"
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Backend.name
   location            = azurerm_resource_group.Azure-ResourceGroup-Backend.location
+
   os_type             = "Linux"
   sku_name            = "B1"
 }
 
-resource "azurerm_linux_web_app" "Azure-App-DHBW2go" {
-  name                = "app-dhbw2go"
+resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
+  name                = "dhbw2go-appservice"
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Backend.name
-  location            = azurerm_service_plan.Azure-ServicePlan-DHBW2go.location
-  service_plan_id     = azurerm_service_plan.Azure-ServicePlan-DHBW2go.id
+  location            = azurerm_service_plan.Azure-ServicePlan.location
+  service_plan_id     = azurerm_service_plan.Azure-ServicePlan.id
 
   site_config {}
 
@@ -19,93 +20,89 @@ resource "azurerm_linux_web_app" "Azure-App-DHBW2go" {
   }
 
   app_settings = {
-    "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-Database-CNAME.hostname
+    "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-CNAME-Database.hostname
     "MYSQL_PORT"     = "3306"
-    "MYSQL_DATABASE" = azurerm_mysql_flexible_database.Azure-MySQL-FlexibleServer-DHBW2go-Database-Backend.name
-    "MYSQL_USERNAME" = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer-DHBW2go.administrator_login
-    "MYSQL_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.Azure-KeyVault-DHBW2go-Secret-Database.versionless_id})"
+    "MYSQL_DATABASE" = azurerm_mysql_flexible_database.Azure-MySQL-FlexibleServer-Database-Backend.name
+    "MYSQL_USERNAME" = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer.administrator_login
+    "MYSQL_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.Azure-KeyVault-Secret-Database.versionless_id})"
 
   }
 }
 
 ################################################################
-#################### Custom Domain Binding #####################
+######################## Custom Domain #########################
 ################################################################
 
-resource "azurerm_app_service_custom_hostname_binding" "Azure-App-DHBW2go-CustomHostnameBinding" {
-  hostname            = "api.${data.cloudflare_zone.Cloudflare-Zone-DHBW2go.name}"
+resource "azurerm_app_service_custom_hostname_binding" "Azure-AppService-CustomHostnameBinding" {
+  hostname            = "api.${data.cloudflare_zone.Cloudflare-Zone.name}"
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Backend.name
-  app_service_name    = azurerm_linux_web_app.Azure-App-DHBW2go.name
+  app_service_name    = azurerm_linux_web_app.Azure-LinuxWebApp.name
 
-  depends_on = [cloudflare_record.Cloudflare-Record-API-CNAME]
+  depends_on = [cloudflare_record.Cloudflare-Record-CNAME-App]
 }
 
-resource "azurerm_app_service_managed_certificate" "Azure-App-DHBW2go-Certificate" {
-  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.Azure-App-DHBW2go-CustomHostnameBinding.id
+resource "azurerm_app_service_managed_certificate" "Azure-AppService-ManagedCertificate" {
+  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.Azure-AppService-CustomHostnameBinding.id
 }
 
-resource "azurerm_app_service_certificate_binding" "Azure-App-DHBW2go-CertificateBinding" {
-  hostname_binding_id = azurerm_app_service_custom_hostname_binding.Azure-App-DHBW2go-CustomHostnameBinding.id
-  certificate_id      = azurerm_app_service_managed_certificate.Azure-App-DHBW2go-Certificate.id
+resource "azurerm_app_service_certificate_binding" "Azure-AppService-CertificateBinding" {
+  hostname_binding_id = azurerm_app_service_custom_hostname_binding.Azure-AppService-CustomHostnameBinding.id
+  certificate_id      = azurerm_app_service_managed_certificate.Azure-AppService-ManagedCertificate.id
 
   ssl_state           = "SniEnabled"
 }
 
-resource "cloudflare_record" "Cloudflare-Record-API-CNAME" {
-  zone_id = data.cloudflare_zone.Cloudflare-Zone-DHBW2go.id
+resource "cloudflare_record" "Cloudflare-Record-CNAME-App" {
+  zone_id = data.cloudflare_zone.Cloudflare-Zone.id
 
   type    = "CNAME"
 
-  name    = "api"
-  value   = azurerm_linux_web_app.Azure-App-DHBW2go.default_hostname
+  name    = "app"
+  value   = azurerm_linux_web_app.Azure-LinuxWebApp.default_hostname
 
-  depends_on = [cloudflare_record.Cloudflare-Record-API-TXT]
+  depends_on = [cloudflare_record.Cloudflare-Record-TXT-App]
 }
 
-resource "cloudflare_record" "Cloudflare-Record-API-TXT" {
-  zone_id = data.cloudflare_zone.Cloudflare-Zone-DHBW2go.id
+resource "cloudflare_record" "Cloudflare-Record-TXT-App" {
+  zone_id = data.cloudflare_zone.Cloudflare-Zone.id
 
   type    = "TXT"
 
   name    = "asuid.api"
-  value   = azurerm_linux_web_app.Azure-App-DHBW2go.custom_domain_verification_id
+  value   = azurerm_linux_web_app.Azure-LinuxWebApp.custom_domain_verification_id
 }
 
 ################################################################
-####################### Role Assignment ########################
+####################### Key Vault Access #######################
 ################################################################
 
-resource "azurerm_role_assignment" "Azure-RoleAssignment-App-DHBW2go-Contributor-Backend" {
-  scope              = azurerm_linux_web_app.Azure-App-DHBW2go.id
+resource "azurerm_key_vault_access_policy" "Azure-KeyVault-AccessPolicy-App" {
+  key_vault_id = azurerm_key_vault.Azure-KeyVault.id
+  tenant_id    = data.azurerm_client_config.Azure-ClientConfig-Current.tenant_id
+  object_id    = azurerm_linux_web_app.Azure-LinuxWebApp.identity[0].principal_id
+
+  secret_permissions = [
+    "Get"
+  ]
+
+  depends_on = [azurerm_linux_web_app.Azure-LinuxWebApp]
+}
+
+################################################################
+######################### GitHub Actions #######################
+################################################################
+
+resource "azurerm_role_assignment" "Azure-RoleAssignment-Contributor-App" {
+  scope              = azurerm_linux_web_app.Azure-LinuxWebApp
   role_definition_name = "Contributor"
 
   principal_id       = var.azure_service_principal_id_backend
   skip_service_principal_aad_check = true
 }
 
-################################################################
-#################### KeyVault Access Policy ####################
-################################################################
-
-resource "azurerm_key_vault_access_policy" "Azure-KeyVault-DHBW2go-AccessPolicy-App" {
-  key_vault_id = azurerm_key_vault.Azure-KeyVault-DHBW2go.id
-  tenant_id    = data.azurerm_client_config.Azure-ClientConfig-Current.tenant_id
-  object_id    = azurerm_linux_web_app.Azure-App-DHBW2go.identity[0].principal_id
-
-  secret_permissions = [
-    "Get"
-  ]
-
-  depends_on = [azurerm_linux_web_app.Azure-App-DHBW2go]
-}
-
-################################################################
-#################### GitHub Actions Variable ###################
-################################################################
-
-resource "github_actions_variable" "GitHub-Actions-Variable-Backend-AZURE_APP_NAME" {
+resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
   repository = var.github_repository_backend
 
   variable_name    = "AZURE_APP_NAME"
-  value            = azurerm_linux_web_app.Azure-App-DHBW2go.name
+  value            = azurerm_linux_web_app.Azure-LinuxWebApp.name
 }
