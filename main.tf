@@ -47,8 +47,3 @@ provider "github" {
 
   owner = var.github_organization
 }
-
-resource "random_password" "RandomPassword-Database" {
-  length  = 16
-  special = true
-}
