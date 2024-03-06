@@ -18,15 +18,6 @@ resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer-DHBW2go" {
   depends_on = [cloudflare_record.Cloudflare-Record-Database-CNAME]
 }
 
-resource "azurerm_mysql_flexible_server_firewall_rule" "Azure-MySQL-FlexibleServer-DHBW2go-AllowAll" {
-  name                = "FirewallRule-AllowAll"
-  resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Data.name
-  server_name         = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer-DHBW2go.name
-
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "255.255.255.255"
-}
-
 resource "azurerm_mysql_flexible_database" "Azure-MySQL-FlexibleServer-DHBW2go-Database-Backend" {
   name                = "backend"
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Data.name
