@@ -93,7 +93,7 @@ resource "azurerm_key_vault_access_policy" "Azure-KeyVault-AccessPolicy-Applicat
 ################################################################
 
 resource "azurerm_role_assignment" "Azure-RoleAssignment-Contributor-Application" {
-  scope              = azurerm_linux_web_app.Azure-LinuxWebApp
+  scope              = azurerm_linux_web_app.Azure-LinuxWebApp.id
   role_definition_name = "Contributor"
 
   principal_id       = var.azure_service_principal_id_backend
