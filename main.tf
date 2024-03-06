@@ -44,6 +44,8 @@ provider "cloudflare" {
 
 provider "github" {
   token = var.github_token
+
+  owner = var.github_organization
 }
 
 resource "random_password" "RandomPassword-Database" {
