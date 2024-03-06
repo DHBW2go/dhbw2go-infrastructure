@@ -44,7 +44,7 @@ resource "cloudflare_record" "Cloudflare-Record-CNAME-Database" {
 }
 
 ################################################################
-
+############################# Subnet ###########################
 ################################################################
 
 resource "azurerm_subnet" "Azure-Subnet-Database" {
@@ -52,16 +52,14 @@ resource "azurerm_subnet" "Azure-Subnet-Database" {
   resource_group_name  = azurerm_resource_group.Azure-ResourceGroup-Network.name
   virtual_network_name = azurerm_virtual_network.Azure-VirtualNetwork.name
 
-  address_prefixes     = ["10.0.0.0/24"]
+  address_prefixes     = ["10.0.1.0/24"]
   service_endpoints    = ["Microsoft.Storage"]
 
   delegation {
-    name = "fs"
+    name = "dhbw2go-delegation-database"
     service_delegation {
       name = "Microsoft.DBforMySQL/flexibleServers"
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
     }
   }
 }

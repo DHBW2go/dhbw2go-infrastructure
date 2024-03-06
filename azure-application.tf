@@ -13,6 +13,8 @@ resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
   location            = azurerm_service_plan.Azure-ServicePlan.location
   service_plan_id     = azurerm_service_plan.Azure-ServicePlan.id
 
+  virtual_network_subnet_id = azurerm_subnet.Azure-Subnet-Application.id
+
   site_config {}
 
   identity {
@@ -70,6 +72,26 @@ resource "cloudflare_record" "Cloudflare-Record-TXT-Application" {
 
   name    = "asuid.api"
   value   = azurerm_linux_web_app.Azure-LinuxWebApp.custom_domain_verification_id
+}
+
+################################################################
+############################# Subnet ###########################
+################################################################
+
+resource "azurerm_subnet" "Azure-Subnet-Application" {
+  name                 = "dhbw2go-subnet-application"
+  resource_group_name  = azurerm_resource_group.Azure-ResourceGroup-Network.name
+  virtual_network_name = azurerm_virtual_network.Azure-VirtualNetwork.name
+
+  address_prefixes     = ["10.0.0.0/24"]
+
+  delegation {
+    name = "dhbw2go-delegation-application"
+    service_delegation {
+      name    = "Microsoft.Web/serverFarms"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+    }
+  }
 }
 
 ################################################################
