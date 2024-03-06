@@ -100,21 +100,6 @@ resource "azurerm_key_vault_access_policy" "Azure-KeyVault-DHBW2go-AccessPolicy-
 }
 
 ################################################################
-################## Database Firewall Rule ######################
-################################################################
-
-resource "azurerm_mysql_flexible_server_firewall_rule" "Azure-MySQL-FlexibleServer-FirewallRule-DHBW2go-App" {
-  foreach = toset(azurerm_linux_web_app.Azure-App-DHBW2go.outbound_ip_address_list)
-
-  name                = "Allow-App-${index(keys(azurerm_linux_web_app.Azure-App-DHBW2go.outbound_ip_address_list), each.value)}"
-  resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Data.name
-  server_name         = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer-DHBW2go.name
-
-  start_ip_address    = each.value
-  end_ip_address      = each.value
-}
-
-################################################################
 #################### GitHub Actions Variable ###################
 ################################################################
 
