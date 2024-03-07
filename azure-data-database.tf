@@ -1,10 +1,5 @@
-variable "database_name" {
-  type = string
-  default = "dhbw2go-database"
-}
-
 resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer" {
-  name                   = var.database_name
+  name                   = "dhbw2go-database"
   resource_group_name    = azurerm_resource_group.Azure-ResourceGroup-Data.name
   location               = azurerm_resource_group.Azure-ResourceGroup-Data.location
 
@@ -18,7 +13,7 @@ resource "azurerm_mysql_flexible_server" "Azure-MySQL-FlexibleServer" {
 
   zone = 3
 
-  depends_on = [cloudflare_record.Cloudflare-Record-CNAME-Database, azurerm_private_dns_zone_virtual_network_link.Azure-PrivateDNSZone-NetworkLink-Database]
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.Azure-PrivateDNSZone-NetworkLink-Database]
 }
 
 resource "azurerm_mysql_flexible_database" "Azure-MySQL-FlexibleServer-Database-Backend" {
@@ -28,19 +23,6 @@ resource "azurerm_mysql_flexible_database" "Azure-MySQL-FlexibleServer-Database-
 
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
-}
-
-################################################################
-######################## Custom Domain #########################
-################################################################
-
-resource "cloudflare_record" "Cloudflare-Record-CNAME-Database" {
-  zone_id = data.cloudflare_zone.Cloudflare-Zone.id
-
-  type    = "CNAME"
-
-  name    = "database"
-  value   = "${var.database_name}.mysql.database.azure.com"
 }
 
 ################################################################

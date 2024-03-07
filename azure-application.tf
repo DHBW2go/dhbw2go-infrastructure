@@ -15,19 +15,24 @@ resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
 
   virtual_network_subnet_id = azurerm_subnet.Azure-Subnet-Application.id
 
-  site_config {}
-
-  identity {
-    type = "SystemAssigned"
+  site_config {
+    application_stack {
+      java_version = 17
+      java_server = "TOMCAT"
+      java_server_version = "10"
+    }
   }
 
   app_settings = {
-    "MYSQL_HOSTNAME" = cloudflare_record.Cloudflare-Record-CNAME-Database.hostname
+    "MYSQL_HOSTNAME" = "${azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer.name}.${azurerm_private_dns_zone.Azure-PrivateDNSZone-Database.name}"
     "MYSQL_PORT"     = "3306"
     "MYSQL_DATABASE" = azurerm_mysql_flexible_database.Azure-MySQL-FlexibleServer-Database-Backend.name
     "MYSQL_USERNAME" = azurerm_mysql_flexible_server.Azure-MySQL-FlexibleServer.administrator_login
     "MYSQL_PASSWORD" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.Azure-KeyVault-Secret-Database.versionless_id})"
+  }
 
+  identity {
+    type = "SystemAssigned"
   }
 }
 
