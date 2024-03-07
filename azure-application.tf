@@ -8,17 +8,18 @@ resource "azurerm_service_plan" "Azure-ServicePlan" {
 }
 
 resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
-  name                = "dhbw2go-appservice"
-  resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Application.name
-  location            = azurerm_service_plan.Azure-ServicePlan.location
-  service_plan_id     = azurerm_service_plan.Azure-ServicePlan.id
+  name                      = "dhbw2go-appservice"
+  resource_group_name       = azurerm_resource_group.Azure-ResourceGroup-Application.name
+  location                  = azurerm_service_plan.Azure-ServicePlan.location
+  service_plan_id           = azurerm_service_plan.Azure-ServicePlan.id
 
   virtual_network_subnet_id = azurerm_subnet.Azure-Subnet-Application.id
 
   site_config {
     application_stack {
-      java_version = 17
-      java_server = "JAVA"
+      java_version        = 17
+      java_server         = "JAVA"
+      java_server_version = "17"
     }
   }
 
@@ -44,7 +45,7 @@ resource "azurerm_app_service_custom_hostname_binding" "Azure-AppService-CustomH
   resource_group_name = azurerm_resource_group.Azure-ResourceGroup-Application.name
   app_service_name    = azurerm_linux_web_app.Azure-LinuxWebApp.name
 
-  depends_on = [cloudflare_record.Cloudflare-Record-CNAME-Application]
+  depends_on          = [cloudflare_record.Cloudflare-Record-CNAME-Application]
 }
 
 resource "azurerm_app_service_managed_certificate" "Azure-AppService-ManagedCertificate" {
@@ -59,12 +60,12 @@ resource "azurerm_app_service_certificate_binding" "Azure-AppService-Certificate
 }
 
 resource "cloudflare_record" "Cloudflare-Record-CNAME-Application" {
-  zone_id = data.cloudflare_zone.Cloudflare-Zone.id
+  zone_id    = data.cloudflare_zone.Cloudflare-Zone.id
 
-  type    = "CNAME"
+  type       = "CNAME"
 
-  name    = "api"
-  value   = azurerm_linux_web_app.Azure-LinuxWebApp.default_hostname
+  name       = "api"
+  value      = azurerm_linux_web_app.Azure-LinuxWebApp.default_hostname
 
   depends_on = [cloudflare_record.Cloudflare-Record-TXT-Application]
 }
@@ -111,7 +112,7 @@ resource "azurerm_key_vault_access_policy" "Azure-KeyVault-AccessPolicy-Applicat
     "Get"
   ]
 
-  depends_on = [azurerm_linux_web_app.Azure-LinuxWebApp]
+  depends_on   = [azurerm_linux_web_app.Azure-LinuxWebApp]
 }
 
 ################################################################
@@ -119,15 +120,15 @@ resource "azurerm_key_vault_access_policy" "Azure-KeyVault-AccessPolicy-Applicat
 ################################################################
 
 resource "azurerm_role_assignment" "Azure-RoleAssignment-Contributor-Application" {
-  scope              = azurerm_linux_web_app.Azure-LinuxWebApp.id
-  role_definition_name = "Contributor"
+  scope                            = azurerm_linux_web_app.Azure-LinuxWebApp.id
+  role_definition_name             = "Contributor"
 
-  principal_id       = var.azure_service_principal_id_backend
+  principal_id                     = var.azure_service_principal_id_backend
   skip_service_principal_aad_check = true
 }
 
 resource "github_actions_variable" "GitHub-Actions-Variable-AZURE_APP_NAME" {
-  repository = var.github_repository_backend
+  repository       = var.github_repository_backend
 
   variable_name    = "AZURE_APP_NAME"
   value            = azurerm_linux_web_app.Azure-LinuxWebApp.name
