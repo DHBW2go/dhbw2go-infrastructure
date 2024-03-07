@@ -18,8 +18,7 @@ resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
   site_config {
     application_stack {
       java_version = 17
-      java_server = "TOMCAT"
-      java_server_version = "10"
+      java_server = "JAVA"
     }
   }
 
