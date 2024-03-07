@@ -19,6 +19,7 @@ resource "azurerm_linux_web_app" "Azure-LinuxWebApp" {
     application_stack {
       java_version = 17
       java_server = "JAVA"
+      java_server_version : "17"
     }
   }
 
